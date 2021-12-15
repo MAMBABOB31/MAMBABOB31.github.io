@@ -39,17 +39,26 @@
         </div>
         <div class="row justify-content-center">
           <div class="col-md-8">
+            <div class="alert alert-succes alert-dismissible fade show d-none my-alert" role="alert">
+              <strong>Terimakasih</strong> Pesan anda sudah kami Terima.
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
             <form name="wpu-contact-form">
               <div class="mb-3">
-                <h3>Nama</h3>
+                <label for="name" class="form-label">Nama Lengkap</label>
                 <input type="text" class="form-control" id="name" aria-describedby="name" name="nama" />
               </div>
 
               <div class="mb-3">
-                <h3>Keluhan</h3>
-                <textarea class="form-control" id="pesan" rows="4" name="keluhan"></textarea>
+                <label for="pesan" class="form-label">pesan</label>
+                <textarea class="form-control" id="pesan" rows="4" name="pesan"></textarea>
               </div>
-              <button type="submit" class="btn btn-primary">Kirim</button>
+              <button type="submit" class="btn btn-primary btn-kirim">Kirim</button>
+
+              <button class="btn btn-primary btn-loading d-none" type="button" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+              </button>
             </form>
           </div>
         </div>
@@ -58,14 +67,27 @@
     <!-- END Form Pengaduan -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
     <script>
-      const scriptURL = '<https://script.google.com/macros/s/AKfycbyLSjXp0xI8ecLXOf_aap5095paQGxn4hG9lL69FtEAXJ9buJzl_lhV1Z6sNZIdIA19vA/exec>';
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbxU4yrqew9T2eNKZARYH-jJYB6L6aAAK4XeylgrOk5wuIsmDZ7ENpPNT1LQEMQCBgL2eg/exec';
       const form = document.forms['wpu-contact-form'];
+      const btnKirim = document.querySelector('.btn-kirim');
+      const btnLoading = document.querySelector('.btn-loading');
+      const myAlert = document.querySelector('.my-alert');
 
       form.addEventListener('submit', (e) => {
         e.preventDefault();
+        btnLoading.classList.toggle('d-none');
+        btnKirim.classList.toggle('d-none');
+
         fetch(scriptURL, { method: 'POST', body: new FormData(form) })
-          .then((response) => console.log('Success!', response))
+          .then((response) => {
+            btnLoading.classList.toggle('d-none');
+            btnKirim.classList.toggle('d-none');
+            myAlert.classList.toggle('d-none');
+            form.reset();
+            console.log('Success!', response);
+          })
           .catch((error) => console.error('Error!', error.message));
       });
     </script>
